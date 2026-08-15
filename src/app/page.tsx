@@ -1,15 +1,16 @@
-import { auth } from  "@/src/lib/auth"
-import Link from "next/link";
+import Navbar from "./components/NavBar";
+import "bootstrap/dist/css/bootstrap.css";
+import imagePath from "./logo aple.jpg";
 
-export default async function Home(){
-  const session = await auth();
-
-  if(!session){
-    return <div>
-      Kamu Belum{" "}
-      <Link style={{ color: "blue" }} href={"/api/auth/sigin"}>LOGIN</Link>
+function page() {
+  let items = ["Home", "Product", "Services"];
+  return (
+    <div>
+      <Navbar brandName="MP Codes" 
+      imageSrcPath={imagePath} 
+      navItems={items} />
     </div>
-  }
-
-  return <div>{JSON.stringify(session)}</div>
+  );
 }
+
+export default page;
