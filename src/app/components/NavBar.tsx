@@ -1,13 +1,12 @@
 "use client";
-import { useState, useEffect } from "react"; 
-import "./NavBar.css";
+import { useState, useEffect } from "react";
 interface NavBarProps {
   brandName: string;
   imageSrcPath: any;
   navItems: string[];
 }
 function NavBar({ brandName, imageSrcPath, navItems }: NavBarProps) {
-    useEffect(() => {
+  useEffect(() => {
     require("bootstrap/dist/js/bootstrap.bundle.min.js");
   }, []);
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -41,11 +40,11 @@ function NavBar({ brandName, imageSrcPath, navItems }: NavBarProps) {
                 onClick={() => setSelectedIndex(index)}
               >
                 <a
-                  className={
-                    selectedIndex === index
-                      ? "nav-link active fw-bold"
-                      : "nav-link"
-                  }
+                  className={`nav-link px-3 py-2 mx-1 transition-colors hover:!text-black hover:!bg-[#f0f0f0] !rounded-md ${
+                    selectedIndex === index 
+                      ? "active fw-bold !text-black !bg-[#f0f0f0]" 
+                      : "!text-gray-600"
+                  }`}
                   href="#"
                 >
                   {items}

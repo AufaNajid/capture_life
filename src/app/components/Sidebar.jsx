@@ -3,6 +3,8 @@ import { ChevronFirst } from "lucide-react";
 import { ChevronLast } from "lucide-react";
 import { MoreVertical } from "lucide-react";
 import { useState, createContext, useContext } from "react";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 const SidebarContext = createContext();
 export default function Sidebar({ children }) {
@@ -63,9 +65,13 @@ export default function Sidebar({ children }) {
   );
 }
 
-export function SidebarItem({ icon, text, active, alert }) {
+export function SidebarItem({ icon, text, alert, href}) {
   const { expanded } = useContext(SidebarContext);
+  const pathname = usePathname();
+  const targetPath = href || "#";
+  const active = pathname === targetPath;
   return (
+    <Link href={targetPath} style={{ textDecoration: 'none' }}>
     <li
       className={`
             relative flex items-center py-2 px-3 my-1
@@ -106,5 +112,6 @@ export function SidebarItem({ icon, text, active, alert }) {
         </div>
       )}
     </li>
+    </Link>
   );
 }
