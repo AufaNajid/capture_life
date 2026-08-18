@@ -7,11 +7,6 @@ datasource db {
   provider = "postgresql"
 }
 
-enum UserRole {
-  admin
-  operator
-}
-
 enum EventStatus {
   active
   archived
@@ -24,11 +19,16 @@ enum SessionMode {
   boomerang
 }
 
+enum UserRole {
+  admin
+  operator
+}
+
 model User {
   id           String   @id @default(uuid())
   email        String   @unique
   passwordHash String
-  role         UserRole
+  role         UserRole @default(admin)
   createdAt    DateTime @default(now())
 
   events Event[]
@@ -39,56 +39,46 @@ model Event {
   name      String
   eventCode String      @unique
   ownerId   String
-  startDate DateTime
-  endDate   DateTime
+  owner     User        @relation(fields: [ownerId], references: [id])
+  startDate DateTime?
+  endDate   DateTime?
   status    EventStatus @default(active)
   createdAt DateTime    @default(now())
 
-  owner     User       @relation(fields: [ownerId], references: [id])
   templates Template[]
   sessions  Session[]
-
-  @@index([ownerId])
 }
 
 model Template {
   id           String   @id @default(uuid())
   eventId      String
+  event        Event    @relation(fields: [eventId], references: [id])
   name         String
   imageUrl     String
-  layoutConfig Json
+  layoutConfig Json?
   createdAt    DateTime @default(now())
 
-  event    Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
   sessions Session[]
-
-  @@index([eventId])
 }
 
 model Session {
   id         String      @id @default(uuid())
   eventId    String
+  event      Event       @relation(fields: [eventId], references: [id])
   templateId String?
-  mode       SessionMode
+  template   Template?   @relation(fields: [templateId], references: [id])
+  mode       SessionMode @default(single)
   createdAt  DateTime    @default(now())
 
-  event    Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  template Template? @relation(fields: [templateId], references: [id], onDelete: SetNull)
-  photos   Photo[]
-
-  @@index([eventId])
-  @@index([templateId])
+  photos Photo[]
 }
 
 model Photo {
   id            String   @id @default(uuid())
   sessionId     String
+  session       Session  @relation(fields: [sessionId], references: [id])
   fileUrl       String
-  order         Int
+  order         Int      @default(0)
   filterApplied String?
   createdAt     DateTime @default(now())
-
-  session Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-
-  @@index([sessionId])
 }
