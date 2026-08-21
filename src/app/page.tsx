@@ -1,3 +1,5 @@
+"use client";
+import { useState } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 
 import {
@@ -22,7 +24,7 @@ import Sidebar, { SidebarItem } from "./components/Sidebar";
 
 const NAV_ITEMS = [
   { icon: LayoutDashboard, text: "Dashboard", href: "/" },
-  { icon: Images, text: "Gallery", href: "/galery" },
+  { icon: Images, text: "Gallery", href: "/admin/galery" },
   { icon: Calendar, text: "Events", href: "/events" },
   { icon: ChartNoAxesCombined, text: "Analytics", href: "/analytics" },
 ];
@@ -80,6 +82,7 @@ function DashboardSidebar() {
 }
 
 function DashboardHeader() {
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
   return (
     <header className="dashboard-header">
       <div>
@@ -103,10 +106,11 @@ function DashboardHeader() {
           </span>
         </div>
 
-        <a className="create-event" href="/events">
+        <button className="create-event" onClick={() => setIsPopupOpen(true)}>
           <Plus size={18} /> New event
-        </a>
+        </button>
       </div>
+      {isPopupOpen && <Popup onClose={() => setIsPopupOpen(false)} />}
     </header>
   );
 }
@@ -259,6 +263,55 @@ function TipsCard() {
     </section>
   );
 }
+
+
+export function Popup({ onClose }: { onClose: () => void }) {
+  return (
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm">
+      
+      <div className="relative w-full max-w-sm bg-white p-6 border border-gray-200 rounded-2xl shadow-xl">
+        <button 
+          onClick={onClose} 
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 font-bold"
+        >
+          ✕
+        </button>
+        <form action="#">
+          <h5 className="text-xl font-semibold text-heading mb-6">Add Events</h5>
+          <div className="mb-4">
+            <label className="block mb-2.5 text-sm font-medium text-heading">Event Name</label>
+            <input className="!rounded-lg bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body" placeholder="nama event" required />
+          </div>
+          
+
+
+<div className="relative max-w-sm">
+  <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+    <svg className="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+      <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 10h16m-8-3V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Zm3-7h.01v.01H8V13Zm4 0h.01v.01H12V13Zm4 0h.01v.01H16V13Zm-8 4h.01v.01H8V17Zm4 0h.01v.01H12V17Zm4 0h.01v.01H16V17Z"/>
+    </svg>
+  </div>
+  <input 
+    id="default-datepicker" 
+    type="date" 
+    className="!rounded-lg block w-full ps-10 pe-3 py-2.5 bg-white border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-indigo-600 focus:border-indigo-600 shadow-sm placeholder:text-gray-400" 
+  />
+</div>
+
+            <div className="mb-4">
+                <label className="block mb-2.5 text-sm font-medium text-heading">Location</label>
+                <input className="!rounded-lg bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body" placeholder="location" required />
+            </div>
+            <div className="flex items-center justify-center">
+    <button type="submit" className="px-4 py-2 bg-blue-600 text-white !rounded-lg hover:bg-blue-700 transition-colors">
+    Submit
+    </button>
+    </div>
+            </form>
+        </div>
+        </div>
+    );
+    }
 
 export default function Page() {
   return (
